@@ -1,5 +1,5 @@
 <?php 
- 	//var_dump($_GET);
+ 	var_dump($_GET);
 	include "functions.php";
 	
  	generate_img($_GET);
@@ -20,8 +20,6 @@
                     $img_text			 =	$_GET['img-text-on-image'];
                     $img_color			 =	explode(',' , $_GET['color']);
 
-
-			exit();
 
 			//creates image with width and height
 			$im = @imagecreate($img_width, $img_height)
@@ -69,10 +67,9 @@
 
 	 	elseif (!isset($generate_type)) 
 	 	{
-	 		echo "<h1>no type was set</h1?";
+	 		echo "<h1>no type was set</h1>";
 	 	}
 
 	}
-
 
  ?>

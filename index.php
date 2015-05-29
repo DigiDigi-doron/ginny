@@ -1,3 +1,6 @@
+<?php
+    include "includes/functions.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -26,9 +29,9 @@
     <header id="header"> 
       <div id="nav-wrapper">
         <nav></nav>
-      </div> 
-      <div id="img-gen-login-wrapper">
-      </div> 
+      </div> <!--
+      -->
+
     </header>
     <section class="img-gen-section" id="img-gen-control-section">
       <div id="tabs">
@@ -36,7 +39,6 @@
         <li><a href="#blank">blank image</a></li>
         <li><a href="#subject">by subject</a></li>
       </ul>
-      <!--   -->
       <div id="blank">
       <h2 class="img-gen-title">generate blank image</h2>
           <form class="img-gen-form" id="img-gen-form-blank">
@@ -104,7 +106,22 @@
             </div>
         </div>
     </section>
-    <footer id="footer"></footer>
-  </main> 
+    <footer id="footer">
+        <div id="img-gen-login-wrapper">
+            <!--TODO if user is logged in ($_SESSION) show "Hello $user" + hide form + show logout(session destory())-->
+            <div id="login_wrapper">
+                <div id="login_container">
+                    <form id="login_form">
+                        <label for="username">user name</label>
+                        <input id="username" type="text" name="username"/>
+                        <label for="password">password</label>
+                        <input id="password" type="password" name="password" />
+                        <input id="submit" type="submit" name="submit" value="submit"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+  </main>
   </body>
 </html>

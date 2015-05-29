@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="/ginny/index.php">
+    <serverData>
+      <paths name="/ginny/index.php">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="ginny" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
+

@@ -4,7 +4,7 @@
 	define("DB_URL",	'localhost');
 	define("DB_USER",	'imggen_doron');
 	define("DB_PASS",	'm5c5s7un');
-	define("BASE_URL",	'http://localhost:8080/phpCourse/image-genarator');
+	define("BASE_URL",	'http://localhost:8080/ginny');
 
 	function LoadJpeg($imgname)
 	{
@@ -31,7 +31,7 @@
 	/*
 	* returns the url of a random image by subject
 	*/
-	function get_img_by_subject($subject) 
+        function get_img_by_subject($subject)
 	{
 		//go to DB and get full list of images by subject, use list legnth to extract list of id's
 		//choose an id randomly and return thr image url
@@ -75,6 +75,42 @@
 		return $img;
 	}
 
-	
-	
+    function set_session ()
+    {
+        //TODO when user successfully logged in set a $_SESSION with user name and pass.
+    }
+
+/**
+ * @param $username
+ * @return bool
+ */
+    function user_logged_in ($username)
+    {
+        //TODO chack if user is loged in by useing $_SESSION
+        //return true;
+        return false;
+    }
+
+/**
+ * @param $username
+ * @param $password
+ * @return bool
+ */
+    function attempt_login ($username, $password)
+    {
+        $found_user = true;
+
+        if ($found_user)
+        {
+            //success!
+            //mark user as logged in
+            //
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
  ?>

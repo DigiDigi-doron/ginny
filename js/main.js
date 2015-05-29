@@ -37,7 +37,7 @@ $(document).ready(function()
 						$('.generated-img').remove();
 					}
 
-					$('#img-gen-preview').append("<img class='generated-img' src='../image-genarator/includes/generator.php?"+ form_data +"' alt='img'/>");
+					$('#img-gen-preview').append("<img class='generated-img' src='../ginny/includes/generator.php?"+ form_data +"' alt='img'/>");
 				}
 			});
 	});
@@ -57,55 +57,77 @@ $(document).ready(function()
 			});
 	});
 
+    $('#login_form').submit(function(event)
+    {
+        event.preventDefault();
+        //using jquery validate to validate the form
+        $('#login_form').validate
+        ({
+            rules :{
+                username : {
+                    required: true
+                },
+                password : {
+                    required: true
+                }
+            },
+            messages: {
+                username: "You must specify your user name",
+                password: {
+                    required: "You must specify your password"
+                }
+            },
+            submitHandler:function()
+            {
+                
+                $.ajax({
+
+                    // The URL for the request
+                    url: "includes/login.php",
+
+                    // The data to send (will be converted to a query string)
+                    data: {
+                        username: "Doron",
+                        password: 1234
+                    },
+
+                    // Whether this is a POST or GET request
+                    type: "POST",
+
+                    // The type of data we expect back
+                    dataType : "json",
+
+                    // Code to run if the request succeeds;
+                    // the response is passed to the function
+                    success: function( json ) {
+                        console.log(json);
+                        $( "<h1>" ).text( json.title ).appendTo( "body" );
+                        $( "<div class=\"content\">").html( json.html ).appendTo( "body" );
+                    },
+
+                    // Code to run if the request fails; the raw request and
+                    // status codes are passed to the function
+                    error: function( xhr, status, errorThrown ) {
+                        alert( "Sorry, there was a problem!" );
+                        console.log( "Error: " + errorThrown );
+                        console.log( "Status: " + status );
+                        console.dir( xhr );
+                    },
+
+                    // Code to run regardless of success or failure
+                    complete: function( xhr, status ) {
+                        console.log( "The request is complete!" );
+                    }
+                });
+
+
+            }
+        });
+    });
+
 });
 
-/*--------------------------------------------------------------------*/
 
-// function send_data (form_data) 
-// 	{
-// 		console.log(form_data);
-// 		$.ajax
-// 		({
-// 	      url: 'includes/main.php',
-// 	      type: 'post',
-// 	      data: {
-// 	      		'image-name': 'test-image',
-// 	      		'width':				200,
-// 	      		'height':				200,
-// 	      		'burn-dimensions':		true
-// 	      		},
-
-// 	      success: function(data, status) {
-// 	        if(data == "ok") {
-// 	          $('#img-gen-preview').html('<p><em>Got image!</em></p>');
-// 	        }
-// 	      },
-// 	      error: function(xhr, desc, err) {
-// 	        console.log(xhr);
-// 	        console.log("Details: " + desc + "\nError:" + err);
-// 	      }
-// 	    }); // end ajax call
-
-// 	}
-// $.ajax
-// 					({
-// 				      type: 'post',
-// 				      url: 'includes/main.php',
-// 				      data: form_data ,
-
-// 				      success: function(data, status) {
-// 				      	console.log(status + " / " + data);
-// 				      	$('#img-gen-preview-section').load('includes/main.php');
-// 				        // if(data == "ok") 
-// 				        // {
-// 				        //   //$('#img-gen-preview-section').html('<p><em>Got image!</em></p>');
-// 				        // }
-// 				      },
-// 				      error: function(xhr, desc, err) {
-// 				        console.log(xhr);
-// 				        console.log("Details: " + desc + "\nError:" + err);
-// 				      }
-// 				    }); // end ajax call
 
 	
  
