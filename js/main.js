@@ -79,7 +79,9 @@ $(document).ready(function()
             },
             submitHandler:function()
             {
-                
+
+                var login_form_data = $('#login_form').serializeArray();
+                //console.log(login_form_data);
                 $.ajax({
 
                     // The URL for the request
@@ -87,8 +89,8 @@ $(document).ready(function()
 
                     // The data to send (will be converted to a query string)
                     data: {
-                        username: "Doron",
-                        password: 1234
+                        username: login_form_data[0].value,
+                        password: login_form_data[1].value
                     },
 
                     // Whether this is a POST or GET request
@@ -100,9 +102,14 @@ $(document).ready(function()
                     // Code to run if the request succeeds;
                     // the response is passed to the function
                     success: function( json ) {
-                        console.log(json);
-                        $( "<h1>" ).text( json.title ).appendTo( "body" );
-                        $( "<div class=\"content\">").html( json.html ).appendTo( "body" );
+                        console.log("echoed back- " + json);
+                        if (json.connected == true){
+                            console.log("connection OK redirecting");
+                            window.location =  "http://localhost:8080/ginny/includes/admin.php?username=" + json.username;
+                        }
+                        else {
+                            console.log(json.error);
+                        }
                     },
 
                     // Code to run if the request fails; the raw request and

@@ -71,13 +71,14 @@
 		$img_array = $res->fetch_array(MYSQLI_ASSOC);
 
 		$img = BASE_URL . "/" . "images/" .$img_array['folder']. "/" . $img_array['name'] . ".jpeg";
-		
+		mysql_close();
 		return $img;
 	}
 
     function set_session ()
     {
         //TODO when user successfully logged in set a $_SESSION with user name and pass.
+
     }
 
 /**
@@ -94,23 +95,59 @@
 /**
  * @param $username
  * @param $password
- * @return bool
+ * @return Array
  */
     function attempt_login ($username, $password)
     {
-        $found_user = true;
+        $massage            = Array('connected' => false, 'error' => 'general error - something went wrong');
+        $found_user_name    = false;
+        $found_user_pass    = false;
+        $mysqli             = new mysqli(DB_URL, DB_USER, DB_PASS, DB_NAME);
 
-        if ($found_user)
+        if ($mysqli->connect_errno) {
+            $massage = ['connected' => false , 'error' => 'Failed to connect to MySQL: ' . $mysqli->connect_error];
+            return $massage;
+        }
+
+        $users_query    = "SELECT * FROM admins WHERE username = '" . $username . "'";
+        $user_res       = $mysqli->query($users_query);
+
+        if($user_res->num_rows == 0) {
+            $found_user_name = false;
+            $massage = ['connected' => false, 'error' => 'user name dose not exists'];
+            mysql_close();
+            return $massage;
+        }
+        elseif ($user_res->num_rows == 1)
+        {
+            $found_user_name = true;
+            $pass_query     = "SELECT password FROM admins WHERE username = '" . $username . "'";
+            $pass_res       = $mysqli->query($users_query);
+            $fetched_pass   = $pass_res->fetch_array(MYSQLI_ASSOC)['password'];
+
+            if ($fetched_pass != $password) {
+                $massage = ['connected' => false, 'error' => 'password is wrong'];
+                mysql_close();
+                return $massage;
+            } else
+            {
+                $found_user_pass = true;
+            }
+
+        }
+
+        if ($found_user_name && $found_user_pass)
         {
             //success!
             //mark user as logged in
-            //
-            return true;
+            $_SESSION['user']= $_POST['username'];
+            $_SESSION['logged_in'] = true;
+            $massage = ['connected' => true, 'username' => $username];
+            return $massage;
         }
         else
         {
-            return false;
+            return $massage;
         }
     }
-
  ?>

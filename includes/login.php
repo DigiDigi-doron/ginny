@@ -4,9 +4,12 @@
  * User: Doron
  * Date: 29/05/2015
  * Time: 11:41
+ * pass 1q@w3A user doron | pass AaBb123%
  */
 
 include "functions.php";
+session_start();
+$_SESSION['logged_in'] = false;
 
 if ( !isset($_POST['username'])  || !isset($_POST['password']))
 {
@@ -14,8 +17,8 @@ if ( !isset($_POST['username'])  || !isset($_POST['password']))
     exit;
 }
 
-$username = "Doron";
-$password  = 12345;
+$username   = $_POST['username'];
+$password   = $_POST['password'];
 
 //TODO if login successful set $_SESSION with user name and pass
 //TODO if user us already logged in show massage "Logged in as". User details User-name, pass, email + images
@@ -30,8 +33,7 @@ $password  = 12345;
     else
     {
     //TODO login user. Use $_POST to login user. only after user is logged in - show images and set seesion
-        attempt_login ($username, $password);
-        $arr = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
-        echo json_encode($arr);
+        $login = attempt_login ($username, $password);
+        echo json_encode($login);
     }
 
