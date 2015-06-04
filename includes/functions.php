@@ -6,10 +6,27 @@
 	define("DB_PASS",	'm5c5s7un');
 	define("BASE_URL",	'http://localhost:8080/ginny');
 
+/**
+ * @return mysqli
+ */
+function establish_connection ()
+    {
+        $mysqli = new mysqli(DB_URL, DB_USER, DB_PASS, DB_NAME);
+        if ($mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: " . $mysqli->connect_error;
+            return false;
+        }
+        else
+        {
+           return $mysqli;
+        }
+
+    }
+
 	function LoadJpeg($imgname)
 	{
 		/* Attempt to open */
-		$im = @imagecreatefromjpeg($imgname);
+		$im = imagecreatefromjpeg($imgname);
 
 		/* See if it failed */
 		if(!$im)
@@ -28,6 +45,15 @@
 		return $im;
 	}
 
+/**
+ * @param $filter filter type
+ * @param  $img
+ */
+    function applay_filter ($filter, $img)
+    {
+
+    }
+
 	/*
 	* returns the url of a random image by subject
 	*/
@@ -37,41 +63,38 @@
 		//choose an id randomly and return thr image url
 
 		$list_of_images = array();
-		$img_to_fetcth;
-		$img_id_to_fetcth;
 
-		$mysqli = new mysqli(DB_URL, DB_USER, DB_PASS, DB_NAME);
-			if ($mysqli->connect_errno) {
-			echo "Failed to connect to MySQL: " . $mysqli->connect_error;
-		}
+        $connection = establish_connection();
 
-		//use SQL COUNT(*) function to retreive 
+        //selects all the images with the selected subject
 		$subjects_query = "SELECT * FROM img_subjects WHERE subject = '" . $subject . "'";
 
-		$res = $mysqli->query($subjects_query);
+		$res = $connection->query($subjects_query);
 
 		while($row = $res->fetch_array(MYSQLI_ASSOC)) 
 		{
+            //put all images ID's in an array, to be later used to get random picture
 			array_push($list_of_images,$row["id"]);
-			//put all images ID's in an array, to be later used to get random picture
 		}
 
-		//genarates a random number between 0 and length of array
-		//$img_to_fetcth the number is the position of the image ID in the  $list_of_images 
-		//array, not the ID !
+        /*
+        *genarates a random number between 0 and length of array
+        *$img_to_fetcth the number is the position of the image ID in the  $list_of_images
+        *array, not the ID !
+        */
 
 		$img_to_fetcth = mt_rand (1, count($list_of_images))- 1;
 
-		$img_id_to_fetcth =	$list_of_images[$img_to_fetcth];
+		$img_id_to_fetcth   = $list_of_images[$img_to_fetcth];
 
-		$img_query = "SELECT * FROM img_subjects WHERE id ='" . $img_id_to_fetcth . "'";
+		$img_query = "SELECT name FROM img_subjects WHERE id ='" . $img_id_to_fetcth . "'";
 
-		$res = $mysqli->query($img_query);
+		$res = $connection->query($img_query);
 
 		$img_array = $res->fetch_array(MYSQLI_ASSOC);
 
-		$img = BASE_URL . "/" . "images/" .$img_array['folder']. "/" . $img_array['name'] . ".jpeg";
-		mysql_close();
+		$img = $_SERVER['DOCUMENT_ROOT'] . '/ginny/images/' . $img_array['name'];
+
 		return $img;
 	}
 
@@ -115,7 +138,7 @@
         if($user_res->num_rows == 0) {
             $found_user_name = false;
             $massage = ['connected' => false, 'error' => 'user name dose not exists'];
-            mysql_close();
+            //mysql_close();
             return $massage;
         }
         elseif ($user_res->num_rows == 1)
@@ -127,7 +150,6 @@
 
             if ($fetched_pass != $password) {
                 $massage = ['connected' => false, 'error' => 'password is wrong'];
-                mysql_close();
                 return $massage;
             } else
             {
@@ -148,6 +170,45 @@
         else
         {
             return $massage;
+        }
+    }
+
+/**
+ *@param   $subject
+ * @param $name
+ *@return Bool
+ */
+function register_file_in_DB ($subject,$name)
+    {
+        if (establish_connection() === false)
+        {
+            return false;
+        }
+        else
+        {
+            $connection     =   establish_connection();
+            $upload_query   =  "INSERT INTO img_subjects(subject, name) VALUES ('$subject','$name')";
+            $connection->query($upload_query);
+        }
+    }
+
+    /**
+    *
+    */
+    function count_images ()
+    {
+        if (establish_connection() === false)
+        {
+            return false;
+        }
+        else
+        {
+            $connection     =   establish_connection();
+            $count_query    =   "SELECT COUNT(id) FROM img_subjects";
+            $images_count   =   $connection->query($count_query);
+            $res            =   $images_count->fetch_array(MYSQLI_ASSOC);
+            $count          =   $res['COUNT(id)'];
+            return $count;
         }
     }
  ?>

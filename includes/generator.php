@@ -1,5 +1,5 @@
 <?php 
- 	var_dump($_GET);
+
 	include "functions.php";
 	
  	generate_img($_GET);
@@ -7,14 +7,14 @@
 	function generate_img (Array $form_data) 
 	{
 
-	$generate_type 	= 	@$form_data['generate-type'];
+	$generate_type 	= $form_data['generate-type'];
 
 	 	if ($generate_type == 'blank') 
 	 	{
 	 		
 	 		//genarate image
-                    $img_width 			 =	$_GET['img-width'];
-                    $img_height 		 = 	$_GET['img-height'];
+                    $img_width 			 =	$_GET['img_width'];
+                    $img_height 		 = 	$_GET['img_height'];
                     $img_burn_dimensions = 	(isset($_GET['img-burn-dimensions']) ? true : false   );
                     $img_burn_text 		 = 	(isset($_GET['img-burn-text']) ? true : false   );
                     $img_text			 =	$_GET['img-text-on-image'];
@@ -42,7 +42,7 @@
 				imagestring($im,5, 1, 20, $img_width . " x " . $img_height  , $text_color);
 			}
 
-			header('Content-type: image/png');
+			header('Content-type: image/jpeg');
 			imagepng($im);
 			imagedestroy($im);
 	 	}
@@ -51,18 +51,44 @@
 	 	{
 	 		header('Content-Type: image/jpeg');
 	 		//go to db and get images by parameter
-	 		$img_width      =	$_GET['img-width'];
-			$img_height 	=	$_GET['img-height'];
-			$img_burn	 	=	(isset($_GET['img-burn']) ? true : false);
-			$img_subject	=	$_GET['img-subject-select'];
-			$img_text		=	$_GET['img-text-on-image'];
-			$img_effects 	=	$_GET['img-effect'];
 
-			//$retrived_img = get_img_by_subject($img_subject);
-			//var_dump($retrived_img );
-                        $img = LoadJpeg("..\\images\\abstract\\abstract_1.jpeg");
-			imagejpeg($img);
-			imagedestroy($img);
+            $img_effects	=  ($_GET['img-effect']=='none') ? false : true;
+			$img_subject	=	$_GET['img-subject-select'];
+
+
+			$retrived_img = get_img_by_subject($img_subject);
+            $img = LoadJpeg($retrived_img);
+            if ($img_effects)
+            {
+                $effect = $_GET['img-effect'];
+                switch  ($effect)
+                {
+                    case 'IMG_FILTER_GRAYSCALE':
+                        imagefilter($img, IMG_FILTER_GRAYSCALE);
+                        imagejpeg($img);
+                        imagedestroy($img);
+                        break;
+                    case 'IMG_FILTER_COLORIZE':
+                        imagefilter($img, IMG_FILTER_COLORIZE,  255, 128, 16, 60);
+                        imagejpeg($img);
+                        imagedestroy($img);
+                        break;
+                    case 'IMG_FILTER_PIXELATE':
+                        imagefilter($img, IMG_FILTER_PIXELATE, 15, true);
+                        imagejpeg($img);
+                        imagedestroy($img);
+                        break;
+                    default:
+                    imagejpeg($img);
+                    imagedestroy($img);
+                }
+            }
+            else
+            {
+                imagejpeg($img);
+                imagedestroy($img);
+            }
+
 	 	}
 
 	 	elseif (!isset($generate_type)) 
@@ -71,5 +97,7 @@
 	 	}
 
 	}
+
+
 
  ?>

@@ -3,6 +3,7 @@ Image Genarator_files
 /css/bootstrap.css
 /css/bootstrap.min.css
 /css/bootstrap-theme.css
+/css/dropzone.css
 /nbproject
 /fonts
 /css/normalize.css
@@ -15,7 +16,9 @@ Image Genarator_files
 /js/colpick.js
 /js/jquery.validate.min.js
 /js/jquery-2.1.4.min.js
+/js/dropzone.js
 /test.php
 /includes/test.png
 /includes/Prototype.ttf
 /includes/test.php
+/images
